@@ -70,8 +70,6 @@ git clone https://github.com/sambanova/ai-starter-kit.git
     API_KEY="your-samba-studio-model-apikey"
     ```
 
-3. (Optional) If you are planning to use the `run.sh` bash process. More details about the bash process will be covered later.
-
 ## Create the (virtual) environment
 1. (Recommended) Create a virtual environment and activate it: 
     ```bash
@@ -108,7 +106,7 @@ After you've deployed the GUI, you can use the starter kit. More details will co
 
 ### Performance evaluation workflow
 
-There are two options that users can choose from. The first one is running the performance evaluation process using the terminal, while the other is using the Streamlit app.
+There are two options that users can choose from. The first one is running the performance evaluation process using the Streamlit app, while the other is using the terminal.
 
 #### Using streamlit app
 
@@ -126,10 +124,8 @@ Under the section `Configuration`, users need to introduce the LLM model that wi
 
 Different LLM parameters are available for experimentation, directly related to the previously introduced LLM. The app provides toggles and sliders to facilitate the configuration of all these parameters. Users can use the default values or modify them as needed.
 
-- Number of input tokens: average number of input tokens. Default value: 1000.
-- Input tokens standard deviation: standard deviation of input tokens. Default value: 10.
-- Number of output tokens: average number of output tokens. Default value: 1000.
-- Output tokens standard deviation: standard deviation of output tokens. Default value: 10.
+- Number of input tokens: number of expected input tokens. This value may have a small offset sometimes. Default value: 1000.
+- Number of output tokens: number of expected output tokens. Default value: 1000.
 - Number of total requests: maximum number of completed requests. Default value: 32. 
 - Number of concurrent workers: number of concurrent workers. Default value: 1. 
 - Timeout: time when the process will stop. Default value: 600 seconds
@@ -144,7 +140,7 @@ Click on the `Run!` button. It will automatically start the process. Depending o
 
     **Bar plots**
 
-    Results are composed by four bar plots. (Performance metric values are based on a SambaTurbo endpoint.)
+    Results are composed by four bar plots. (Performance metric values are based on a SambaTurbo endpoint and default parameter values)
 
     - Time to First Token bar plot: users should expect to see a value around 1.2 seconds from Client side numbers. If the endpoint supports dynamic batch size, this plot will show the TTFT per batch.
     - End-to-End Latency bar plot: users should expect to see a value around 8 seconds from Client side numbers. If the endpoint supports dynamic batch size, this plot will show the latency per batch.
@@ -153,15 +149,13 @@ Click on the `Run!` button. It will automatically start the process. Depending o
 
 #### Using terminal
 
-Users have this option if they want to experiment using values that are beyond the limits specified in the Streamlit app parameters.
+Users have this option if they want to experiment using values that are beyond the limits specified in the Streamlit app parameters. __Warning: extreme parameter values may cause long waitings or errors.__
 
 1. Open the file `run.sh` and configure the following parameters in there:
 
    - model: model name to be used. If it's a COE model, add "COE/" prefix to the name. Example: "COE/Meta-Llama-3-8B-Instruct"
-   - mean-input-tokens: average number of input tokens. It's recommended to choose no more than 2000 tokens to avoid long waitings. Default value: 1000.
-   - stddev-input-tokens: standard deviation of input tokens. It's recommended to choose no more than 50% the amount of input tokens. Default value: 10.
-   - mean-output-tokens: average number of output tokens. It's recommended to choose no more than 2000 tokens to avoid long waitings. Default value: 1000.
-   - stddev-output-tokens: standard deviation of output tokens. It's recommended to choose no more than 50% the amount of output tokens. Default value: 10.
+   - num-input-tokens: number of expected input tokens. It's recommended to choose no more than 2000 tokens to avoid long waitings or errors. Default value: 1000.
+   - num-output-tokens: number of expected output tokens. It's recommended to choose no more than 2000 tokens to avoid long waitings or errors. Default value: 1000.
    - max-num-completed-requests: maximum number of completed requests. Default value: 32 
    - num-concurrent-workers: number of concurrent workers. Default value: 1. 
    - timeout: time when the process will stop. Default value: 600 seconds
@@ -174,7 +168,7 @@ Users have this option if they want to experiment using values that are beyond t
 sh run.sh
 ```
 
-3. Review and analyze results. Results will be saved in `results-dir` location, and the name of the output files will depend on the model name, number of mean input/output tokens, number of concurrent workers, and generation mode, like the following:
+3. Review and analyze results. Results will be saved in `results-dir` location, and the name of the output files will depend on the model name, number of input/output tokens, number of concurrent workers, and generation mode, like the following:
 
 ```
 <MODEL_NAME>_{NUM_INPUT_TOKENS}_{NUM_OUTPUT_TOKENS}_{NUM_CONCURRENT_WORKERS}_{MODE}
@@ -184,7 +178,7 @@ For each run, two files are generated with the following suffixes in the output 
 
 - Individual responses file 
 
-This output file contains the number of input and output tokens, number of total tokens, Time To First Token (TTFT), End-To-End Latency (E2E Latency) and Throughput from Server (if available) and Client side, for each individual request sent to the LLM. Users can use this data for further analysis. We provide this notebook `notebooks/analyze-token-benchmark-results.ipynb` with some charts that they can use to start.
+This output file contains the number of input and output tokens, number of total tokens, Time To First Token (TTFT), End-To-End Latency (E2E Latency) and Throughput from Server (if available) and Client side, for each individual request sent to the LLM. Users can use this data for further analysis. We provide a notebook under `notebooks` folder with useful code to show charts that they can use to start.
 
 ![individual_responses_image](./imgs/perf_eval_individual_responses_output.png)
 
